@@ -19,13 +19,13 @@ let redisConnected = false;
 
 async function connectRedis() {
     try {
-        await client.connect(); // Connect to Redis asynchronously
+        await client.connect();
         redisConnected = true;
         console.log('Connected to Redis...');
     } catch (err) {
         console.error('Failed to connect to Redis:', err);
         redisConnected = false;
-        process.exit(1);  // Exit the application if Redis is not available
+        setTimeout(connectRedis, 5000); // Retry after 5 seconds if connection fails
     }
 }
 
