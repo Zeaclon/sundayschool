@@ -88,46 +88,29 @@ function triggerSnow(strength = 1) {
 }
 
 // ==============================
-// Shake Detection
+// Scroll Detection
 // ==============================
-let lastX = null, lastY = null, lastZ = null;
-const shakeThreshold = 5;
+let lastScrollTop = 0;
+const scrollThreshold = 100; // The scroll distance required to trigger the snow
 
-function handleShake(x, y, z) {
-    if (lastX !== null) {
-        let deltaX = x - lastX;
-        let deltaY = y - lastY;
-        let deltaZ = z - lastZ;
+// Handle the scroll event
+function handleScroll() {
+    let scrollTop = window.scrollY || document.documentElement.scrollTop;
 
-        // Use the sum of the absolute values of the deltas
-        let magnitude = Math.abs(deltaX) + Math.abs(deltaY) + Math.abs(deltaZ);
+    // Calculate the scroll strength (how far the user has scrolled)
+    let scrollStrength = Math.abs(scrollTop - lastScrollTop) / scrollThreshold;
+    if (scrollStrength > 1) scrollStrength = 1; // Limit the scroll strength to a maximum of 1
 
-        console.log(`Shake magnitude: ${magnitude}`); // Debug log for shake strength
-
-        // Trigger snow if the shake magnitude exceeds the threshold
-        if (magnitude > shakeThreshold) {
-            windX = deltaX * 0.5; // Adjust snow wind based on shake
-            triggerSnow(Math.min(magnitude / 50, 3)); // Stronger shakes result in more snow
-        }
+    // Trigger the snow effect with the calculated scroll strength
+    if (scrollStrength > 0) {
+        triggerSnow(scrollStrength);
     }
 
-    lastX = x;
-    lastY = y;
-    lastZ = z;
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Keep track of the scroll position
 }
 
-window.addEventListener('devicemotion', (event) => {
-    let {x, y, z} = event.accelerationIncludingGravity;
-    handleShake(x, y, z);
-});
-
-// Keyboard for testing on PC
-window.addEventListener('keydown', (e) => {
-    if (e.key === 's') {
-        let randomShake = Math.random() * 20 + 5;
-        handleShake(randomShake, randomShake, randomShake);
-    }
-});
+// Add scroll event listener
+window.addEventListener('scroll', handleScroll);
 
 // Handle resize
 window.addEventListener('resize', () => {
