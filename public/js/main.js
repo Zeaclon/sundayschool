@@ -91,7 +91,7 @@ function triggerSnow(strength = 1) {
 // Shake Detection
 // ==============================
 let lastX = null, lastY = null, lastZ = null;
-const shakeThreshold = 15;
+const shakeThreshold = 5;
 
 function handleShake(x, y, z) {
     if (lastX !== null) {
@@ -99,10 +99,15 @@ function handleShake(x, y, z) {
         let deltaY = y - lastY;
         let deltaZ = z - lastZ;
 
-        let magnitude = Math.abs(deltaX + deltaY + deltaZ);
+        // Use the sum of the absolute values of the deltas
+        let magnitude = Math.abs(deltaX) + Math.abs(deltaY) + Math.abs(deltaZ);
+
+        console.log(`Shake magnitude: ${magnitude}`); // Debug log for shake strength
+
+        // Trigger snow if the shake magnitude exceeds the threshold
         if (magnitude > shakeThreshold) {
-            windX = deltaX * 0.5;
-            triggerSnow(Math.min(magnitude / 50, 3)); // stronger shake = more snow
+            windX = deltaX * 0.5; // Adjust snow wind based on shake
+            triggerSnow(Math.min(magnitude / 50, 3)); // Stronger shakes result in more snow
         }
     }
 
