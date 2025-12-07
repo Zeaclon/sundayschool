@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities - Redemption of the Dead</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Activity-specific styles */
+        .activity {
+            margin: 2rem auto;
+            max-width: 800px;
+            padding: 1rem 2rem;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+        .activity h3 {
+            color: #2a7f62;
+            margin-bottom: 1rem;
+        }
+        .activity p {
+            margin-bottom: 1rem;
+        }
+        .activity input[type="text"],
+        .activity textarea {
+            width: 90%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        .activity button {
+            margin-bottom: 1rem;
+        }
+        .quiz-question {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+        .quiz-question label {
+            display: block;
+            margin: 0.5rem 0;
+        }
+        #quiz-feedback {
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-container">
+        <h1>Lesson Activities</h1>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="activities.html">Activities</a></li>
+                <li><a href="media.html">Media</a></li>
+                <li><a href="recap.html">Recap</a></li>
+                <li><a href="topics.html">Topics</a></li>
+                <li><a href="reflection.html">Reflection</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <!-- Thought Experiment Activity -->
+    <section class="activity">
+        <h3>Thought Experiment: Life Beyond the Veil</h3>
+        <p>Imagine a world where the work of redeeming the dead is complete. How does this change daily life? How does it affect your perspective on life, death, and eternity?</p>
+        <label>
+            <textarea id="ThoughtExperiment" placeholder="Write your thoughts here..."></textarea>
+        </label>
+        <button onclick="submitActivity('thoughtExperiment')">Submit Reflection</button>
+    </section>
+
+    <!-- Family History Activity -->
+    <section class="activity">
+        <h3>Family History Activity</h3>
+        <p>Consider your ancestors and their spiritual journey. What can you do to learn more about their lives?</p>
+        <label>
+            <input type="text" id="familyHistoryName" placeholder="Ancestor name">
+        </label>
+        <label>
+            <input type="text" id="familyHistoryBirthYear" placeholder="Birth year">
+        </label>
+        <label>
+            <input type="text" id="familyHistoryCountry" placeholder="Country of origin">
+        </label>
+        <button onclick="submitFamilyHistory()">Submit Info</button>
+        <p>Tip: You can use tools like <a href="https://www.familysearch.org" target="_blank">FamilySearch.org</a> to explore more about your family.</p>
+    </section>
+
+    <!-- Personal Reflection -->
+    <section class="activity">
+        <h3>Personal Reflection Prompts</h3>
+        <p>Answer the following:</p>
+        <ul>
+            <li>Because of these revelations, I know that Heavenly Father ______.</li>
+            <li>Because of these revelations, I know that the Father’s plan of salvation ______.</li>
+            <li>Because of these revelations, I want to ______.</li>
+        </ul>
+        <label>
+            <textarea id="personalReflection" placeholder="Write your reflections here..."></textarea>
+        </label>
+        <button onclick="submitReflection()">Submit Reflection</button>
+    </section>
+
+    <!-- Quiz Activity -->
+    <section class="activity">
+        <h3>Understanding the Vision</h3>
+        <p>Answer the following questions in your own words:</p>
+        <ol>
+            <li>What did Joseph Smith learn about his brother Alvin?</li>
+            <textarea placeholder="Your answer..." id="q1"></textarea>
+            <li>What does D&C 138 teach about the spirit world?</li>
+            <textarea placeholder="Your answer..." id="q2"></textarea>
+            <li>Why is the Savior’s work important after death?</li>
+            <textarea placeholder="Your answer..." id="q3"></textarea>
+        </ol>
+        <button onclick="submitQuiz()">Submit Answers</button>
+        <p id="quiz-feedback"></p>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2025 YSA Lesson Planner</p>
+</footer>
+
+<script>
+    function submitActivity(id) {
+        const text = document.querySelector(`#ThoughtExperiment`).value;
+        console.log(`Submitting Activity: ${id}, Text: ${text}`);  // Debugging log
+
+        if (!text.trim()) {
+            alert('Please write something before submitting.');
+            return;
+        }
+
+        fetch('/api/saveAnswer', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id, text })
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('Reflection submitted!');
+                console.log('Response:', data);
+                document.querySelector(`#ThoughtExperiment`).value = '';  // Clear input after submission
+            })
+            .catch(err => {
+                alert('Error submitting reflection');
+                console.error(err);
+            });
+    }
+
+    function submitFamilyHistory() {
+        const name = document.querySelector("#familyHistoryName").value.trim();
+        const birthYear = document.querySelector("#familyHistoryBirthYear").value.trim();
+        const country = document.querySelector("#familyHistoryCountry").value.trim();
+
+        if (!name || !birthYear || !country) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
+        const data = { name, birthYear, country };
+
+        fetch('/api/saveFamilyHistory', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('Family history info submitted!');
+                console.log('Response:', data);
+                document.querySelector("#familyHistoryName").value = '';  // Clear inputs
+                document.querySelector("#familyHistoryBirthYear").value = '';
+                document.querySelector("#familyHistoryCountry").value = '';
+            })
+            .catch(err => {
+                alert('Error submitting family history');
+                console.error(err);
+            });
+    }
+
+    function submitReflection() {
+        const text = document.querySelector("#personalReflection").value;
+        if (!text.trim()) {
+            alert('Please write something before submitting.');
+            return;
+        }
+
+        fetch('/api/saveReflection', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text })
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('Reflection submitted!');
+                console.log('Response:', data);
+                document.querySelector("#personalReflection").value = '';  // Clear input
+            })
+            .catch(err => {
+                alert('Error submitting reflection');
+                console.error(err);
+            });
+    }
+
+    function submitQuiz() {
+        const answers = ['q1', 'q2', 'q3'];
+        let allFilled = true;
+        const data = {};
+        answers.forEach(id => {
+            const val = document.getElementById(id).value.trim();
+            if (!val) allFilled = false;
+            data[id] = val;
+        });
+        if (!allFilled) {
+            alert('Please answer all questions.');
+            return;
+        }
+        document.getElementById('quiz-feedback').textContent = 'Your answers have been submitted!';
+        console.log('Quiz submission data:', data);
+
+        fetch('/api/saveAnswers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response:', data);
+            })
+            .catch(err => {
+                console.error('Error submitting quiz answers:', err);
+            });
+    }
+</script>
+
+</body>
+</html>

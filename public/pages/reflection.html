@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflection Answers - Redemption of the Dead</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Styling for the container holding all reflection cards */
+        .reflection-container {
+            margin: 2rem auto;
+            max-width: 900px;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* Tiled card effect */
+        .reflection-card {
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 1rem;
+            padding: 1rem;
+            border-radius: 15px;
+            text-align: left;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Shadow for 3D effect */
+            transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effect */
+            height: 200px;  /* Optional: Set height for uniform cards */
+        }
+
+        /* Card hover effect */
+        .reflection-card:hover {
+            transform: translateY(-5px); /* Card lifts up */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Darker shadow */
+        }
+
+        /* Title for the reflection card */
+        .reflection-card h4 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: #2a7f62;
+            font-weight: bold;
+        }
+
+        /* Text in the reflection card */
+        .reflection-card p {
+            font-size: 1rem;
+            color: #333;
+            word-wrap: break-word;
+            height: 100%;  /* Allow text to wrap properly */
+            overflow: hidden; /* Prevent long texts from breaking the layout */
+            text-overflow: ellipsis; /* Show ellipsis if text overflows */
+        }
+
+        /* Container for the answers */
+        #answers-list {
+            display: grid;  /* Use grid layout for tiling */
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive columns */
+            gap: 1rem;  /* Space between the cards */
+        }
+
+        /* Empty state message */
+        .no-reflections {
+            font-size: 1.2rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-container">
+        <h1>Reflection Answers</h1>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="activities.html">Activities</a></li>
+                <li><a href="media.html">Media</a></li>
+                <li><a href="recap.html">Recap</a></li>
+                <li><a href="topics.html">Topics</a></li>
+                <li><a href="reflection.html">Reflection</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main>
+    <div class="reflection-container" id="reflection-container">
+        <h2>Activity Answers</h2>
+        <p>Here are the answers submitted by others. All submissions are anonymous.</p>
+
+        <div id="answers-list">
+            <p class="no-reflections">Loading answers...</p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2025 YSA Lesson Planner</p>
+</footer>
+
+<script>
+    // Function to fetch answers from the server and display them
+    function fetchAnswers() {
+        fetch('/api/getAllAnswers')
+            .then(response => response.json())
+            .then(data => {
+                const answersList = document.getElementById('answers-list');
+                answersList.innerHTML = '';  // Clear the loading text
+
+                if (data.answers.length === 0) {
+                    answersList.innerHTML = '<p class="no-reflections">No answers available yet.</p>';
+                    return;
+                }
+
+                // Loop through the answers and display them
+                data.answers.forEach(answer => {
+                    const card = document.createElement('div');
+                    card.classList.add('reflection-card');
+                    card.innerHTML = `
+                        <h4>Activity: ${answer.id.replace(/([A-Z])/g, ' $1').trim()}</h4>
+                        <p>${answer.text}</p>
+                    `;
+                    answersList.appendChild(card);
+                });
+            })
+            .catch(err => {
+                console.error('Error fetching answers:', err);
+                const answersList = document.getElementById('answers-list');
+                answersList.innerHTML = '<p class="no-reflections">Error loading answers.</p>';
+            });
+    }
+
+    // Call the function to load answers when the page loads
+    window.onload = fetchAnswers;
+</script>
+
+</body>
+</html>

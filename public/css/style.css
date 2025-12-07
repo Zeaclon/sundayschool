@@ -1,0 +1,244 @@
+/* ========================================
+   Global Reset & Base
+======================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    line-height: 1.6;
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 1rem;
+}
+
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+            45deg,
+            rgba(255,255,255,0.05),
+            rgba(255,255,255,0.05) 2px,
+            transparent 2px,
+            transparent 6px
+    );
+    z-index: 0;
+}
+
+/* ========================================
+   Center Paragraphs
+======================================== */
+main img {
+    display: block; /* keeps images centered */
+    margin: 1rem auto;
+}
+
+main p {
+    text-align: center; /* center paragraphs */
+}
+
+main {
+    text-align: center; /* centers inline content like paragraphs and links */
+}
+
+/* For lists */
+main ul {
+    list-style: disc;
+    padding-left: 1.5rem; /* add indentation for bullets */
+    display: inline-block; /* optional: keeps the list centered */
+    text-align: left; /* keeps bullets readable */
+    margin: 1rem auto;
+}
+
+/* ========================================
+   System Theme Detection
+======================================== */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #1c1c1c;
+        color: #f5f5f5;
+    }
+    a {
+        color: #ff6b6b; /* festive red */
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: #fffaf0;
+        color: #222;
+    }
+    a {
+        color: #2a7f62; /* evergreen green */
+    }
+}
+
+/* ========================================
+   Header & Titles
+======================================== */
+/* ========================================
+   Header & Navigation
+======================================== */
+header {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+body.dark header {
+    background-color: rgba(28, 28, 28, 0.7);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+header h1 {
+    font-family: 'Georgia', serif;
+    font-size: 2rem;
+    text-align: center;
+    color: #c92c2c; /* festive red */
+    line-height: 1.2;
+    margin: 0;
+}
+
+body.dark header h1 {
+    color: #ff6b6b;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-links li a {
+    font-family: 'Segoe UI', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    color: #2a7f62; /* evergreen green */
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark .nav-links li a {
+    color: #ff6b6b;
+}
+
+.nav-links li a:hover {
+    background-color: #c92c2c;
+    color: #fff;
+}
+
+/* Responsive: stack nav on small screens */
+@media (max-width: 600px) {
+    .nav-links {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+
+h1, h2, h3 {
+    font-family: 'Georgia', serif;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #c92c2c; /* festive red accent */
+}
+
+h2 {
+    font-size: 2rem;
+    color: #2a7f62; /* evergreen green accent */
+}
+
+/* ========================================
+   Links & Buttons
+======================================== */
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    background-color: #c92c2c;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ff6b6b;
+}
+
+/* ========================================
+   Content Layout
+======================================== */
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 0 1rem;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* ========================================
+   Responsive
+======================================== */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+    body {
+        padding: 0.5rem;
+    }
+}
